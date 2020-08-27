@@ -2,15 +2,52 @@ import React, { Component } from 'react';
 
 class Filter extends Component {
     render() {
-        const FilterType = this.props.FilterType
-        const dropDownOptions = this.props.dropDownOptions
+        const filterType = this.props.filterType
+        const filterOptions = {
+            printType: [
+                {
+                    value: 'all',
+                    name: 'All'
+                },
+                {
+                    value: 'books',
+                    name: 'Book'
+                },
+                {
+                    value: 'magazines',
+                    name: 'Magazines'
+                }
+            ],
+            bookType: [
+                {
+                    value: 'No-Filter',
+                    name: 'No Filter'
+                },
+                {
+                    value: 'free-ebooks',
+                    name: 'Free ebooks'
+                },
+                {
+                    value: 'paid-ebooks',
+                    name: 'Paid ebooks'
+                },
+                {
+                    value: 'ebooks',
+                    name: 'ebooks'
+                }
+            ]
+        }
+        const options = filterOptions[filterType].map(option => {
+            return (
+            <option value={option.value} key={option.value}>{option.name}</option>
+            )
+        })
         
         return (   
-        <div className={FilterType}>
-            <label htmlFor="title">{FilterType}: </label>
-            <select name={FilterType} id={FilterType}>
-                <option value={dropDownOptions}>{dropDownOptions}</option>
-                <option value={dropDownOptions}>{dropDownOptions}</option>
+        <div className={filterType}>
+            <label htmlFor="title">{filterType}: </label>
+            <select name={filterType} id={filterType}>
+               {options}
             </select>
             
         </div>);

@@ -1,21 +1,27 @@
 import React, { Component } from "react";
 import BookResult from '../BookResult/BookResult'
+import './SearchResultList.css'
 
 class SearchResultList extends Component {
     render() {
-        console.log(this.props.bookList)
+        
+        console.log(this.props.books)
 
             const bookList = this
             .props
-            .bookList
-            .map((book, i) => <BookResult { ...book } key={i}/>);
+            .books
+            .map((book, i) => <BookResult {...book} key={i}/>);
       
       return (
-        <div className="bookResultList">
+        <ul className="bookResultList">
           {bookList}
-        </div>
+        </ul>
         )
     }
 }
+
+SearchResultList.defaultProps = {
+    bookList: []
+};
 
 export default SearchResultList;
