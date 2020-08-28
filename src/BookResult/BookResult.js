@@ -18,33 +18,19 @@ class BookResult extends Component {
         } else {
             authors = `Author: ${this.props.volumeInfo.authors}`
         }
-
-        let text = ""
-        if (this.props.searchInfo.textSnippet === undefined) {
-            text = this.props.volumeInfo.description
-        } else {
-            text = this.props.searchInfo.textSnippet
-        }
-        //const wordLimit = 50
-        //let textToLimit = this.props.volumeInfo.description
         
-        /*function limitWords(textToLimit, wordLimit) {
-            var finalText = “ ”;
-            var text2 = textToLimit.replace(/\s+/g, ‘ ‘);
-            var text3 = text2.split(‘ ‘);
-
-            var numberOfWords = text3.length;
-
-            var i=0;
-
-            if(numberOfWords > wordLimit) {
-            for(i=0; i< wordLimit; i++)
-            finalText = finalText+” “+ text3[i]+” “;
-
-            return finalText+”…”;
-            }
-            else return textToLimit;
-            }*/
+        
+        let description = ""
+        let text = this.props.volumeInfo.description
+        if (text === undefined) {
+            description = "No description available."
+        }
+        else if (text.length > 299) {
+            description = text.slice(0, 300) + "..."
+        } else {
+            description = text
+        }
+        
         
 
         return (
@@ -52,17 +38,21 @@ class BookResult extends Component {
                 <div className="column">
                     <img src={this.props.volumeInfo.imageLinks.thumbnail} alt="book cover" width="200px"/>
                 </div>
-                <div className="column">
+                <ul className="column">
                     <h3>{this.props.volumeInfo.title}</h3>
-                    <p>{authors}</p>
-                    <p>{price}</p>
-                    <p>{this.props.volumeInfo.description}</p>
+                    <li>{authors}</li>
+                    <br/>
+                    <li>{price}</li>
+                    <br/>
+                    <li className="description">{description}</li>
+                    <br/>
                     <button 
                     className="more-info"
+                    onClick={e => this.props.selectBook(this.props.index)}
                     >
                     More Info
                     </button>
-                </div>
+                </ul>
             </li>
         )
          

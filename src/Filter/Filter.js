@@ -46,7 +46,7 @@ class Filter extends Component {
         return (   
         <div className={filterType}>
             <label htmlFor="title">{filterType}: </label>
-            <select name={filterType} id={filterType}>
+            <select name={filterType} id={filterType} onChange={e => this.props.filterChange(filterType, e.target.value)}>
                {options}
             </select>
             

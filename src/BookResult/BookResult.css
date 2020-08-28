@@ -2,4 +2,9 @@
     float: left;
     width: 33.33%;
     padding: 10px;
+    flex: 50%;
+    list-style-type: none; 
   }
+
+
+

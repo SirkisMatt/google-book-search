@@ -6,8 +6,13 @@ class SearchBar extends Component {
         return (   
         <div className="SearchBox">
             <label htmlFor="title">Search:</label>
-            <input type="text" name="search" id="search" placeholder="Search" required/>
-            <button type="submit" >Search</button>
+            <input 
+            type="text" 
+            name="search" 
+            id="search" 
+            placeholder="Search"
+            required/>
+            <button type="submit">Search</button>
         </div>);
     }
 }

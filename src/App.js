@@ -4,22 +4,7 @@ import SearchAndFilter from './SearchAndFilter/SearchAndFilter';
 import SearchResultList from './SearchResultList/SearchResultList'
 import MoreDetails from './MoreDetails/MoreDetails'
 
-const bookList = [
-{
-title: "Wild Mind",
-author: "Bill Plotkin",
-listPrice: 31.57,
-textSnippet: "Wild Mind identifies these resources — which Bill Plotkin calls the four facets of the Self, or the four dimensions of our innate human wholeness — and also the four sets of fragmented or wounded subpersonalities that form during ...",
-thumbnail: "http://books.google.com/books/content?id=OczmHOQi5zsC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
-},
-{
-  title: "Soul Craft",
-  author: "Bill Plotkin",
-  listPrice: 31.57,
-  textSnippet: "Since 1980, depth psychologist Bill Plotkin has been guiding women and men into the wilderness — the redrock canyons and snow-crested mountains of the American West — but also into the wilds of the soul. He calls this work soulcraft.",
-  thumbnail: "http://books.google.com/books/content?id=Kuy725kczicC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"
-}
-];
+
 const apiKey = "AIzaSyBJWaxPt7SR0fRiUpoBMZY-lT_Ifqskg_A"
 
 class App extends Component {
@@ -29,16 +14,36 @@ class App extends Component {
     super(props);
     this.state = {
       books: [],
+      error: null,
       printType: "all",
       bookType: "No-Filter",
-      searchQuery: "Soul Craft"
+      searchQuery: "Soul",
+      selectedBook: -1
     };
   }
+
+  filterChange (type, value) {
+    let state = {}
+    state[type]=value
+    
+    this.setState(state, this.grabBook);
+    
+  }
  
+  searchQueryChanged(e) {
+    e.preventDefault();
+    
+    this.setState({
+      searchQuery: e.target.search.value
+    }, this.grabBook)
+   
+    
+  }
+  
   
 
-  componentDidMount() {
-    this._isMounted = true;
+  grabBook() {
+    console.log(this.state.searchQuery)
 
     let url = ``
     if (this.state.bookType === "No-Filter") {
@@ -68,25 +73,47 @@ class App extends Component {
     
   }
 
-  componentWillUnmount() {
-    this._isMounted = false;
+
+  selectBook(bookIndex) {
+    this.setState({
+      selectedBook: bookIndex
+    }
+    )
   }
+
+ /* grabBook(printType, bookType, searchQuery) {
+    this.setState({
+      printType: "all",
+      bookType: "No-Filter",
+      searchQuery: "Soul",
+    })
+  }*/
 
   render(){
 
+    const moreDetails =  this.state.selectedBook >= 0
+    ? <MoreDetails 
+      book={this.state.books[0]}
+      selectBook={select => this.selectBook(select)}
+      />
+    : <SearchResultList 
+      error={this.state.error}
+      books={this.state.books}
+      selectBook={select => this.selectBook(select)}
+      />
     
     return (
       <div className="App">
         <header className="App-header">
           <h1>Google Book Search</h1>
-          <SearchAndFilter />
+          <SearchAndFilter 
+          
+          filterChange={(type, value) => this.filterChange(type, value)}
+          searchQueryChanged={e => this.searchQueryChanged(e)}
+          />
         </header>
         <main>
-          <SearchResultList 
-            bookList={bookList}
-            books={this.state.books}
-          />
-          <MoreDetails />
+         {moreDetails}
         </main>
       </div>
     );
