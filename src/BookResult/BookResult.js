@@ -2,49 +2,29 @@ import React, { Component } from "react";
 import './BookResult.css'
 
 class BookResult extends Component {
+    static defaultProps = {
+       bookCover: "",
+       title: "",
+       price: "",
+       authors: "",
+       description: ""
+    }
+    
     render() {
-        let price = ""
-        if (this.props.saleInfo.saleability === "NOT_FOR_SALE") {
-            price = "Currently not for Sale"
-        } else {
-             price = `Price: $${this.props.saleInfo.listPrice.amount} ${this.props.saleInfo.listPrice.currencyCode}`
-        }
-        
-
-        let authors = ""
-        if (this.props.volumeInfo.authors.length > 1) {
-            let manyAuthors = this.props.volumeInfo.authors.map(author => " " + author).toString()
-            authors = `Authors: ${manyAuthors}`
-        } else {
-            authors = `Author: ${this.props.volumeInfo.authors}`
-        }
-        
-        
-        let description = ""
-        let text = this.props.volumeInfo.description
-        if (text === undefined) {
-            description = "No description available."
-        }
-        else if (text.length > 299) {
-            description = text.slice(0, 300) + "..."
-        } else {
-            description = text
-        }
-        
-        
+    
 
         return (
             <li className="BookResult">
                 <div className="column">
-                    <img src={this.props.volumeInfo.imageLinks.thumbnail} alt="book cover" width="200px"/>
+                    <img src={this.props.bookCover} alt="book cover" width="200px"/>
                 </div>
                 <ul className="column">
-                    <h3>{this.props.volumeInfo.title}</h3>
-                    <li>{authors}</li>
+                    <h3>{this.props.title}</h3>
+                    <li>{this.props.authors}</li>
                     <br/>
-                    <li>{price}</li>
+                    <li>{this.props.price}</li>
                     <br/>
-                    <li className="description">{description}</li>
+                    <li className="description">{(this.props.description.length > 299) ? this.props.description.slice(0, 300) + "..." : this.props.description}</li>
                     <br/>
                     <button 
                     className="more-info"

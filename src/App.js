@@ -17,7 +17,7 @@ class App extends Component {
       error: null,
       printType: "all",
       bookType: "No-Filter",
-      searchQuery: "Soul",
+      searchQuery: "",
       selectedBook: -1
     };
   }
@@ -26,7 +26,7 @@ class App extends Component {
     let state = {}
     state[type]=value
     
-    this.setState(state, this.grabBook);
+    this.setState(state, () => {if (this.state.searchQuery !== "") this.grabBook()});
     
   }
  
@@ -36,14 +36,12 @@ class App extends Component {
     this.setState({
       searchQuery: e.target.search.value
     }, this.grabBook)
-   
-    
   }
   
   
 
   grabBook() {
-    console.log(this.state.searchQuery)
+   
 
     let url = ``
     if (this.state.bookType === "No-Filter") {
@@ -60,18 +58,39 @@ class App extends Component {
       })
       .then(res => res.json())
       .then(data => {
-        this.setState({
-          books: data.items,
-          error: null
-        });
-      })
+        this.handleResponse(data)
+      }
+      )
       .catch(err => {
         this.setState({
           error: err.message
         });
       });
-    
   }
+
+  handleResponse(data) {
+    this.setState({
+      books: data.items.map(book => {
+        return {
+          title: book.volumeInfo.title,
+          author: (book.volumeInfo.authors) ? (book.volumeInfo.authors.length > 1) ? "Authors: " + book.volumeInfo.authors.join(" ") : "Author: " + book.volumeInfo.authors[0] : "Unknown Author",
+          bookCover: book.volumeInfo.imageLinks.thumbnail,
+          price: (book.saleInfo.saleability === "NOT_FOR_SALE") ? "Currently not for Sale" : (book.saleInfo.saleability === "FREE") ? "Free" : `Price: $${book.saleInfo.listPrice.amount} ${book.saleInfo.listPrice.currencyCode}`,
+          description: book.volumeInfo.description,
+          averageRating: (book.volumeInfo.averageRating) ? book.volumeInfo.averageRating : "No Rating Available",
+          buyLink: (book.saleInfo.buyLink ) ? book.saleInfo.buyLink : "#"
+        }
+      }),
+      error: null
+    });
+  }
+  
+
+
+  /* this.setState({
+          books: data.items,
+          error: null
+        }); */
 
 
   selectBook(bookIndex) {
@@ -81,19 +100,12 @@ class App extends Component {
     )
   }
 
- /* grabBook(printType, bookType, searchQuery) {
-    this.setState({
-      printType: "all",
-      bookType: "No-Filter",
-      searchQuery: "Soul",
-    })
-  }*/
 
   render(){
 
     const moreDetails =  this.state.selectedBook >= 0
     ? <MoreDetails 
-      book={this.state.books[0]}
+      book={this.state.books[`${this.state.selectedBook}`]}
       selectBook={select => this.selectBook(select)}
       />
     : <SearchResultList 
